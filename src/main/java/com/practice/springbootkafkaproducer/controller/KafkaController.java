@@ -3,10 +3,7 @@ package com.practice.springbootkafkaproducer.controller;
 import com.practice.springbootkafkaproducer.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/kafka")
@@ -14,12 +11,21 @@ public class KafkaController {
 
     @Autowired
     private KafkaTemplate<String, Person> kafkaTemplate;
-    private static final String TOPIC="KafkaExample";
+    //private static final String TOPIC="KafkaExample";
+    //private static final String TOPIC="KafkaExampleJson";
+    //private static final String TOPIC="KafkaJson";
+    private static final String TOPIC="DemoTopic";
 
     @GetMapping("/publish/{name}")
     public String postMessage(@PathVariable final String name){
         kafkaTemplate.send(TOPIC, new Person(name,"Detroit", 25, 9890.24));
-        return "Published the message successfully!";
+        return "Published the Json message successfully!";
+    }
+
+    @PostMapping("/publish")
+    public String sendMessage(@RequestBody Person person){
+        kafkaTemplate.send(TOPIC, person);
+        return "Published the Json message successfully!";
     }
 
     //Kafka Server Properties
